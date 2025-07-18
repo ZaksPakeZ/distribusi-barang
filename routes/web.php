@@ -13,11 +13,14 @@ use App\Http\Controllers\{
 use Illuminate\Support\Facades\Auth;
 
 // Halaman utama
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+})->name('home');
 
 // Dashboard Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/', fn() => view('welcome'))->name('home');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/', fn() => view('welcome'))->name('home');
     Route::resource('produk', ProductController::class);
     Route::resource('stok', StokController::class)->only(['index', 'create', 'store']);
 });
