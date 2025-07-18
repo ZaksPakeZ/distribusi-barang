@@ -48,4 +48,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            // Jika kamu punya kolom 'role' di tabel users
+            if ($user->role) {
+                $user->assignRole($user->role);
+            }
+        });
+    }
 }

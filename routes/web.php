@@ -10,12 +10,13 @@ use App\Http\Controllers\{
     AdminController,
     BranchController
 };
+use Illuminate\Support\Facades\Auth;
 
 // Halaman utama
-Route::get('/', fn() => view('welcome'))->name('home');
 
 // Dashboard Admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/', fn() => view('welcome'))->name('home');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('produk', ProductController::class);
     Route::resource('stok', StokController::class)->only(['index', 'create', 'store']);
@@ -42,6 +43,11 @@ Route::middleware('auth')->group(function () {
 
 // Role tester
 Route::get('/test-role', fn() => 'Kamu punya role admin')->middleware(['auth', 'role:admin']);
+
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+});
 
 // Fallback atau Auth
 require __DIR__ . '/auth.php';
